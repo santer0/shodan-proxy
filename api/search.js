@@ -7,11 +7,14 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const { query, key } = req.query;
+  const { query } = req.query;
+  const key = process.env.SHODAN_API_KEY;
 
   if (!query || !key) {
     return res.status(400).json({
-      error: 'Faltan parámetros obligatorios (query o key)'
+      error: !query
+        ? 'Falta el parámetro query'
+        : 'Falta la variable de entorno SHODAN_API_KEY'
     });
   }
 
