@@ -16,11 +16,11 @@ export default async function handler(req, res) {
 
   try {
     // Constructor nativo: Elimina cualquier error humano de sintaxis o comillas
-    const shodanUrl = new URL("https://shodan.io");
+    const shodanUrl = new URL("https://api.shodan.io/shodan/host/search");
     shodanUrl.searchParams.append("key", key);
     shodanUrl.searchParams.append("query", query);
 
-    // Petición real a Shodan con IP limpia de Vercel
+    // Petición real a la API oficial de Shodan
     const response = await fetch(shodanUrl.toString(), {
       method: 'GET',
       headers: {
