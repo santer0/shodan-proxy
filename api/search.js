@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+  // Configuración de cabeceras CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -13,10 +14,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Faltan parámetros obligatorios (query o key)' });
   }
 
-  const shodanUrl = `https://shodan.io{encodeURIComponent(key)}&query=${encodeURIComponent(query)}`;
-
   try {
-    const response = await fetch(shodanUrl, {
+    // Constructor nativo: Elimina cualquier error humano de sintaxis o comillas
+    const shodanUrl = new URL("https://shodan.io");
+    shodanUrl.searchParams.append("key", key);
+    shodanUrl.searchParams.append("query", query);
+
+    // Petición real a Shodan con IP limpia de Vercel
+    const response = await fetch(shodanUrl.toString(), {
       method: 'GET',
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
